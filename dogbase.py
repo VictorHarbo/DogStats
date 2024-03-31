@@ -1,7 +1,12 @@
 import logging
+import configparser
+from datetime import datetime
 from garmindb import GarminConnectConfigManager
 from garmindb.garmindb import GarminDb, Attributes, File, ActivitiesDb, GarminSummaryDb, Activities, DaysSummary, StepsActivities
 
+# Config and log setup
+config = configparser.ConfigParser()
+config.read("config.ini")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -11,6 +16,10 @@ db_params_dict = gc_config.get_db_params()
 garmin_db = GarminDb(db_params_dict)
 garmin_act_db = ActivitiesDb(db_params_dict)
 garmin_sum_db = GarminSummaryDb(db_params_dict)
+
+# Date of dog in life 
+DOG_DATE = config["config"].get("dog_date")
+
 
 
 
@@ -62,4 +71,44 @@ def all_steps():
 
     return all_steps
 
+def steps_before_dog():
+    """
+    Get a dict of dates with amount of steps as values for all dates until a dog came into your application.
+    """
+    # Create a datetime object for a specific date
+    start_date = datetime(2000, 1, 1).date()
 
+    records_before_dog = DaysSummary.get_for_period(garmin_sum_db, start_date, dog_date())
+    steps_before_dog = {}
+
+    for record in records_before_dog:
+        date = str(getattr(record, "day"))
+        steps = getattr(record, "steps")
+        steps_before_dog[date] = steps
+
+    return steps_before_dog
+    
+
+def steps_since_dog():
+    """
+    Get a dict of dates with amount of steps as values for all dates since a dog came into your application.
+    """
+
+   
+
+    # Get the current date
+    today_date = datetime.now().date()
+
+    records_after_dog = DaysSummary.get_for_period(garmin_sum_db, dog_date(), today_date)
+    steps_after_dog = {}
+
+    for record in records_after_dog:
+        date = str(getattr(record, "day"))
+        steps = getattr(record, "steps")
+        steps_after_dog[date] = steps
+
+    return steps_after_dog
+
+def dog_date():
+    """Parse the date of acquireing a dog from config as a date object, Expects a string in the format YYYY-MM-DD."""
+    return datetime.strptime(DOG_DATE, "%Y-%m-%d").date()
