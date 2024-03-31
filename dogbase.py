@@ -1,6 +1,4 @@
 import logging
-import json
-import fitfile
 from garmindb import GarminConnectConfigManager
 from garmindb.garmindb import GarminDb, Attributes, File, ActivitiesDb, GarminSummaryDb, Activities, DaysSummary, StepsActivities
 
@@ -17,6 +15,10 @@ garmin_sum_db = GarminSummaryDb(db_params_dict)
 
 
 def overview():
+    """
+    Get an overview of the backing GarminDB instance.
+    Shows information on amount of records in different parts of the DB and variables in each part.
+    """
     #measurement_system = Attributes.measurements_type(garmin_db)
     #unit_strings = fitfile.units.unit_strings[measurement_system]
     #distance_units = unit_strings[fitfile.units.UnitTypes.distance_long]
@@ -35,28 +37,29 @@ def overview():
 
     return file_stats
 
-def latest_activities(amount):
-    activities = Activities.get_latest(garmin_act_db, 10)
-    json_activities = json.dumps(activities)
-    return json_activities
-
-
 # Correct way of accessing variables inside objects
-def stepsForDate(date):    
-    content = DaysSummary.get_day(garmin_sum_db, date)
-    logger.warning(content)
-    return str(getattr(content, "steps"))
+def steps_for_date(date):    
+    """
+    Get amount of steps for a given date.
+    
+    Params:
+     date (string): A date string in the format: YYYY-MM-DD
+    """
+    single_day = DaysSummary.get_day(garmin_sum_db, date)
+    # Logging to figure what is inside a DaysSymmary class.
+    logger.warning(single_day)
+    return str(getattr(single_day, "steps"))
 
 def all_steps():
     """Create a dict with dates as keys and the amount of steps walked that day as values."""
     allRecords =  DaysSummary.get_all(garmin_sum_db)
-    allSteps = {}
+    all_steps = {}
 
     for record in allRecords:
         date = str(getattr(record, "day"))
         steps = getattr(record, "steps")
-        allSteps[date] = steps
+        all_steps[date] = steps
 
-    return allSteps
+    return all_steps
 
 
