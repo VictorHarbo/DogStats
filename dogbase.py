@@ -94,8 +94,6 @@ def steps_since_dog():
     Get a dict of dates with amount of steps as values for all dates since a dog came into your application.
     """
 
-   
-
     # Get the current date
     today_date = datetime.now().date()
 

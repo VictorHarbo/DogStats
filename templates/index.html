@@ -9,33 +9,60 @@
 <body>
     <div style="height: 50vh; width: 50%;">
         <canvas id="stepsWithDog"></canvas>
-        <p> The average amount of steps is: {{average}}</p>
+        <p> The average amount of steps is: {{averageWithDog}}</p>
+    </div>
+    <br>
+
+    <div style="height: 50vh; width: 50%;">
+        <canvas id="stepsNoDog"></canvas>
+        <p> The average amount of steps is: {{averageNoDog}}</p>
     </div>
  
     <script>
-        const labels = {{ labels | tojson}};
+        const labelsWithDog = {{ labelsWithDog | tojson}};
+        const labelsNoDog = {{ labelsNoDog | tojson}}
  
-        const data = {
-            labels: labels,
+        const dataWithDog = {
+            labels: labelsWithDog,
             datasets: [{
                 label: 'Steps With Dog',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: {{ data | tojson}},
+                data: {{ dataWithDog | tojson}},
             }]
         };
- 
-        const config = {
+        const dataNoDog = {
+            labels: labelsNoDog,
+            datasets: [{
+                label: 'Steps before Dog',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: {{ dataNoDog | tojson}},
+            }]
+        };
+
+        const configWithDog = {
             type: 'line',
-            data: data,
+            data: dataWithDog,
             options: { maintainAspectRatio: false }
         };
- 
+        const configNoDog = {
+            type: 'line',
+            data: dataNoDog,
+            options: { maintainAspectRatio: false }
+        };
+
         const stepsWithDog = new Chart(
             document.getElementById('stepsWithDog'),
-            config
+         configWithDog
         );
- 
+
+        const stepsNoDog = new Chart(
+            document.getElementById('stepsNoDog'),
+         configNoDog
+        );
+
+        
     </script>
 </body>
 </html>

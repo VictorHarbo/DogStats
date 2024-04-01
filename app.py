@@ -9,26 +9,44 @@ app = Flask(__name__)
 
 @app.route('/')
 def homepage():
+    variables_for_html = {}
+    
     # Define Plot Data 
-    
-    steps_with_dog = steps_since_dog()
-    
-    
-    dates = []
-    steps = []
-    
-    for entry in steps_with_dog:
-        dates.append(entry)
-        steps.append(steps_with_dog[entry])
+    # Data with dog
+    data_with_dog = steps_since_dog()
+    dates_with_dog = []
+    steps_with_dog = []
         
-    average_steps = calculate_average(steps)
+    for entry in data_with_dog:
+        dates_with_dog.append(entry)
+        steps_with_dog.append(data_with_dog[entry])
+                
+    average_steps_with_dog = calculate_average(steps_with_dog)
+    
+    
+    # Data without dog
+    data_without_dog = steps_before_dog()
+    dates_without_dog = []
+    steps_without_dog = []
+    
+    for entry in data_without_dog:
+        dates_without_dog.append(entry)
+        steps_without_dog.append(data_without_dog[entry])
+        
+    average_steps_without_dog = calculate_average(steps_without_dog)
+    
+    
  
     # Return the components to the HTML template 
     return render_template(
         template_name_or_list='index.html',
-        data=steps,
-        labels=dates,
-        average=average_steps
+        dataWithDog=steps_with_dog,
+        labelsWithDog=dates_with_dog,
+        averageWithDog=average_steps_with_dog,
+        
+        dataNoDog=steps_without_dog,
+        labelsNoDog=dates_without_dog,
+        averageNoDog=average_steps_without_dog
     )
 
 
