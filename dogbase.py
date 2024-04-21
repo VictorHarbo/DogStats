@@ -103,10 +103,41 @@ def steps_since_dog():
     for record in records_after_dog:
         date = str(getattr(record, "day"))
         steps = getattr(record, "steps")
-        steps_after_dog[date] = steps
+        steps_after_dog[str(date)] = int(steps)
 
     return steps_after_dog
 
 def dog_date():
     """Parse the date of acquireing a dog from config as a date object, Expects a string in the format YYYY-MM-DD."""
     return datetime.strptime(DOG_DATE, "%Y-%m-%d").date()
+
+def get_activities():
+    """get all activities in the DB
+    """
+    allRecords =  Activities.get_all(garmin_act_db)
+    return allRecords
+
+
+def get_activies_of_type(type):
+    """Get all activities of a given type from the DB
+    Args:
+        type (String): Type of activities to fetch from DB.
+    """
+    activities = Activities.get_by_sport(garmin_act_db, type)
+    return activities
+
+def get_activities_with_name(name):
+    """_summary_
+
+    Args:
+        name (_type_): _description_
+    """
+    all_activities = Activities.get_all(garmin_act_db)
+    
+    activities_with_name = []
+    
+    for entry in all_activities:
+        if entry.name == name:
+            activities_with_name.append(entry)
+    
+    return activities_with_name
