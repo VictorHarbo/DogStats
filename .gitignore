@@ -164,6 +164,8 @@ cython_debug/
 
 # Added for this project specifically
 # Garmin DB stuff
+share
+bin
 bin/garmindb_bug_report.py
 bin/garmindb_cli.py
 bin/garmindb_checkup.py
