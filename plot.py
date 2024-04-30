@@ -22,6 +22,7 @@ define_plot(0, dictionary_of_steps.keys(), dictionary_of_steps.values(), '#D9EDB
             'Skridt de sidste 7 dage', 'Dato', 'Skridt')
 axs[0].tick_params(axis='x', rotation=45)
 axs[0].set_xticklabels([s[5:] for s in  dictionary_of_steps.keys()])
+axs[0].axhline(y=10000, c="black", linewidth=1, linestyle="dashed")
 
 # Add the mean  of values from the first plot to the plot as a text entry.
 sum_values = sum(dictionary_of_steps.values())
@@ -46,6 +47,8 @@ define_plot(2, dates, durations, '#FFCF81', 'Minutters planke pr. uge',
             'Uge', 'Minutters planke')
 axs[2].xaxis.set_major_locator(MaxNLocator(integer=True))
 axs[2].set_xlim(14, datetime.date.today().isocalendar()[1])
+axs[2].axhline(y=10, c="black", linewidth=1, linestyle="dashed")
+
 
 # Adjust layout and display plot
 plt.tight_layout()
